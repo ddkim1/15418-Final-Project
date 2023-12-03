@@ -1,1 +1,113 @@
-<a href="https://ddkim1.github.io/15418-Final-Project/15-418%20Project%20Proposal.pdf"> Proposal </a>
+<!DOCTYPE HTML>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>15618 Final Project Website</title>
+
+  <meta name="author" content="Daniel Kim, Yang Zhou">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  <link rel="icon" type="image/png" href="webimage/mine_icon.png">
+</head>
+
+<body>
+    <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+        <tr style="padding:0px">
+            <td style="padding:0px">
+                <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+                    <tr style="padding:0px">
+                        <td style="padding:2.5%;width:63%;vertical-align:middle;">
+                                <!-- <name>15618 Final Project Demo</name> -->
+                                <h1 style="font-size: 24px; margin: 0; text-align:center; padding-bottom: 8px">15618 Final Project Demo</h1>
+                                <h2 style="font-size: 18px; margin: 0; text-align:center; padding-bottom: 20px">Parallel Minesweeper Solver, by Daniel Kim and Yang Zhou</h2>
+                                <p> <strong>Project Summary: </strong>We are going to implement a solver for the game Minesweeper using several parallel methods. We will be analyzing the speedup from utilizing CUDA, OpenMP, and if time persists, MPI, compared to a sequential implementation.</p>
+                            <p style="text-align:center">
+                                <a href="https://ddkim1.github.io/15418-Final-Project/15-418%20Project%20Proposal.pdf"> Proposal.pdf </a> &nbsp/&nbsp
+                                <a href="https://github.com/ddkim1/15418-Final-Project.git"> Github Repo</a> &nbsp/&nbsp 
+                            </p> 
+                        </td>
+                        <td style="padding:2.5%;width:40%;max-width:40%">
+                            <a href="webimage/expert.png"><img style="width:100%;max-width:100%" alt="Web image source: https://minesweeper.online/" src="webimage/expert.png" class="hoverZoomLink"></a>
+                            <p style="text-align:center">Minesweeper Game Web image source: https://minesweeper.online/</p>
+                        </td>
+                    </tr> 
+                </tbody></table> 
+
+                <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+                    <tr style="padding:0px">
+                        <td style="padding:20px;width:100%;vertical-align:middle"> 
+                            <heading><strong>Timeline</strong></heading>
+                                <p>
+                                    We will aim to stick to the following schedule:
+                                </p>
+                                <div style="width:100%;overflow-y:scroll; height:230px;">
+                                <ul> 
+                                    <li style="line-height:30px"> <b>November 19, 2023</b> We will complete our preliminary research on minesweeper solvers, finalize the sequential algorithm we will be implementing, and also complete the design for the board data structure. </li> 
+                                    <li style="line-height:30px"> <b>November 26, 2023</b> We will complete the sequential implementation of the solver. In addition, we will also code a checker script that will tell us the correctness of our algorithm, in addition to any speedup we have against the sequential algorithm. </li> 
+                                    <li style="line-height:30px"> <b>December 1, 2023</b> We will finish the parallel implementation of our algorithm using OpenMP, and we will begin writing our milestone report. </li> 
+                                    <li style="line-height:30px"> <b>December 3, 2023</b> We will finish our milestone report by this point and submit by 11:59 pm. </li> 
+                                    <li style="line-height:30px"> <b>December 10, 2023</b> We will finish the parallel implementation of our algorithm using CUDA, and we will begin preparing for the final report and the poster session. </li> 
+                                    <li style="line-height:30px"> <b>December 14, 2023</b> We will finalize our final report and submit it by 11:59 pm. We will also finalize our poster session presentation materials. </li> 
+                                </ul>
+                                </div> 
+                                <p>
+                                    If Time allow, we will aim to finish these optional features: 
+                                    <div style="width:100%;overflow-y:scroll; height:100px;">
+                                        <ul>
+                                            <li style="line-height:30px"> <b>December 12, 2023</b> We will finish the parallel implementation of our algorithm using MPI, and incorporate the results of this algorithm into our final report. </li> 
+                                            <li style="line-height:30px"> <b>December 15, 2023</b> We will have a live demo displaying our parallel solvers in action. </li> 
+                                        </ul>
+                                    </div>
+                                </p>
+                        </td> 
+                    </tr> 
+
+                <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+                    <tr style="padding:0px">
+                        <td style="padding:20px;width:100%;vertical-align:middle; padding-bottom: 10px">
+                            <heading><strong>Background</strong></heading>
+                            <p>
+                                Minesweeper is a popular logic puzzle computer video game in which the player’s objective is to clear the grid while not clicking on any of the hidden mines. To determine the location of the mines, players will be given clues in the form of numbers on spaces, where the number indicates the number of adjacent squares that contain a mine. Despite its simple nature, it has been proved as a co-NP complete problem. [1] As a result, efficient sequential implementations currently do not exist, and performance gains will be found through parallelization. 
+                            </p>
+                            <p>
+                                In this project, our goal will be to first implement a sequential program that is able to solve a board by clearing the board while not exposing any mines. Afterwards, we aim to build upon our work by parallelizing this program using several different parallel frameworks. The general approach towards solving a board is that we will look at every possible square, and denote the probability for each square that it contains a mine. From there, the program will mark off any squares that for sure have mines, and then click on squares with the lowest probability of containing a mine. This process continues until the board is cleared. However, especially for large grids, this becomes a very slow process to perform sequentially, as at each step, the program would have to analyze every square at each step to determine which square to click next, especially if there are numerous squares that are guaranteed to contain mines. Instead, if we were to parallelize the program by, for instance, dividing the squares of the grid across different parallel workers, it could lead to substantial speedup.
+                            </p>
+                        </td> 
+                    </tr> 
+                    <tr style="padding:0px"> 
+                        <td style="padding:20px;width:100%;vertical-align:middle; padding-bottom: 10px">
+                            <heading><strong>The Challenge</strong></heading>
+                            <p>
+                                The workload is difficult to perfectly balance largely due to there being less mines or potential squares to click in certain areas of the board. Ideally, if we were to perfectly divide the workload across the parallel workers, then each worker would have an equal number of mines in their assigned squares; however, that is not necessarily the case, as Minesweeper often has large areas of squares with no mines nearby. Attempting to find a good workload split that balances the workload across the workers will be challenging as a result.
+                            </p> 
+                            <p>
+                                In addition, communication also makes workload balance quite difficult. If a worker manages to mark a square as a mine, or if a worker manages to clear a square as not a mine, then it needs to communicate this information to other workers that may use this information to be able to clear their squares. This then becomes a challenge of determining which workers we need to communicate with whenever we clear a square. Designing such algorithms to divide the workload as evenly as possible might need us to research existing literature to delve into heuristics or stochastic nature of the bomb nature. 
+                            </p> 
+                            <p>
+                                Another challenge originates from the nature of the game. Sometimes, minesweeper requires the user to guess on which step to proceed. In this case, it favors the recursive parallelization methods like OpenMP. However, we want to still achieve good results using data parallelism tools like OpenMPI or CUDA. In addition, given that we have a powerful GPU or a powerful CPU with many cores, we would also like to try to parallelize our solver to perform multiple guesses at once. All of these thoughts are interesting and also challenging to implement. 
+                            </p> 
+                        </td> 
+                    </tr> 
+                    <tr style="padding:0px"> 
+                        <td style="padding:20px;width:100%;vertical-align:middle; padding-bottom: 10px">
+                            <heading><strong>Deliverable Updates</strong></heading>
+                            <p> We will be updating our deliverables on this website as we progress through the project. </p> 
+                        </td> 
+                    </tr> 
+                    <tr style="padding:0px"> 
+                        <td style="padding:20px;width:100%;vertical-align:middle; padding-bottom: 10px">
+                            <heading><strong>Citations</strong></heading>
+                            <p> 
+                                [1] Becerra, David J. Algorithmic approaches to playing minesweeper. Diss. 2015. 
+                            </p> 
+                            <p> 
+                                [2] https://dev.to/krlove/creating-advanced-minesweeper-solver-using-logic-programming-2ppd 
+                            </p> 
+                        </td> 
+                    </tr> 
+                </tbody>
+            </td>
+        </tr>
+    </tbody></table> 
+</body> 
+</html>
