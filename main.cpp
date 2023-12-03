@@ -20,11 +20,11 @@ int main(int argc, char **argv) {
                     height = 9;
                     width = 9;
                     mines = 10;
-                } elif (optarg == "medium") {
+                } else if (optarg == "medium") {
                     height = 16;
                     width = 16;
                     mines = 40;
-                } elif (optarg == "hard") {
+                } else if (optarg == "hard") {
                     height = 30;
                     width = 16;
                     mines = 99;
@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
     Minesweeper* minesweeper = new Minesweeper(h, w, mines);
     int initialX = rand() % height;
     int initialY = rand() % width;
-    minesweeper->placeMines(initialX, initialY);
+    minesweeper->boardSetup(initialX, initialY);
 
     if (mode == 0) {
         printf("Solving using sequential algorithm");
