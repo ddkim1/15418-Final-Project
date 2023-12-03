@@ -90,6 +90,30 @@
                     </tr> 
                     <tr style="padding:0px"> 
                         <td style="padding:20px;width:100%;vertical-align:middle; padding-bottom: 10px">
+                            <heading><strong>Goals and Deliverables</strong></heading> 
+                            <p>
+                                Our end goal is to achieve speedup relative to the sequential version of the solver. 
+                            </p>
+                            <p> 
+                                Deliverables are summarized in the following list (1-3 are what we plan to achieve, while 4 is what we hope to achieve): 
+                                1). We will develop an efficient working version of the sequential solver of the game, which is capable of running on both CPU and GPU platforms. 
+                                2). After that, we would build upon the sequential version and finish our initial effort of parallelization using OpenMP and CUDA.
+                                3). For each parallel implementation, after we successfully finish our programs we will attempt to determine better workload distributions in hopes of improving speedup.
+                                4). We hope to build a visualization tool to showcase the speed of our parallelized solver and also implement a parallel solver using MPI if time permits.
+                            </p>
+                            <p> 
+                                In summary, we plan to achieve a working sequential, CUDA, and OpenMP implementation, in addition to a script that will check for both correctness of our implementation as well as the speedup we achieve in comparison to a sequential implementation. We also hope to achieve an implementation using MPI, and in addition to the speedup graphs for the parallel implementations, we also hope to have a form of live demonstration of the parallel solvers at the poster session. Through the graphs and the live demonstrations, we hope to showcase the speedup we obtained from parallelizing our program, in addition to which parallel framework we found to work the best for this particular problem.
+                            </p> 
+                            <p> 
+                                Through our analysis, we are hoping to learn how fast a minesweeper solver can be made through parallelization, and we are also hoping to learn the applicability of parallelization in improving the performance of algorithms for NP-complete problems such as minesweeper.
+                            </p> 
+                            <p> 
+                                <strong>For more details about the platforms and resources we plan, please checkout the project proposal linked before. </strong>
+                            </p>
+                        </td> 
+                    </tr> 
+                    <tr style="padding:0px"> 
+                        <td style="padding:20px;width:100%;vertical-align:middle; padding-bottom: 10px">
                             <heading><strong>Deliverable Updates</strong></heading>
                             <p> We will be updating our deliverables on this website as we progress through the project. </p> 
                         </td> 
