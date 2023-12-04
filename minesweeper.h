@@ -9,8 +9,10 @@ public:
     int **board;
     int **solverboard;
     int **mineLocations;
+    int **solverMineLocations; 
     Minesweeper(int height, int width, int mines);
     void placeMines(int x, int y);
     void sequentialSolver();
     bool isValid(int x, int y);
+    void boardSetup(int x, int y); 
 };
