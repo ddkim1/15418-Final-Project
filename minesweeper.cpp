@@ -153,9 +153,9 @@ bool Minesweeper::sequentialSolver() {
         }
         if (!performMove(initialX, initialY)) {
             for (int i = 0; i < mines; i++) {
-            solverboard[mineLocations[i][0]][mineLocations[i][1]] = -1;
+                solverboard[mineLocations[i][0]][mineLocations[i][1]] = -1;
             }
-        return false;
+            return false;
         }
     }
 
