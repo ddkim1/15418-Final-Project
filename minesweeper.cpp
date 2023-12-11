@@ -123,7 +123,7 @@ bool Minesweeper::performMove(int x, int y) {
             for (int j = 0; j < width; j++) {
                 neighborMines = neighboringMines(i, j);
                 unknownSquares = unknownTiles(i, j);
-                if (neighborMines == solverboard[i][j] || unknownSquares == solverboard[i][j] - neighborMines) {
+                if (neighborMines == solverboard[i][j]) {
                     doubleTap(i, j);
                     backtrack = true;
                 }
