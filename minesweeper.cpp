@@ -136,6 +136,18 @@ bool Minesweeper::performMove(int x, int y) {
     }
 }
 
+bool Minesweeper::solverCorrectness() {
+    if (minesLeft > 0) {
+        return false;
+    }
+    for (int i = 0; i < mines; i++) {
+        if (solverboard[solverMineLocations[i][0]][solverMineLocations[i][1]] != -1) {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool Minesweeper::sequentialSolver() {
     if (!performMove(initialX, initialY)) {
         for (int i = 0; i < mines; i++) {
