@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    Minesweeper* minesweeper = new Minesweeper(h, w, mines);
+    Minesweeper* minesweeper = new Minesweeper(height, width, mines); 
     int initialX = rand() % height;
     int initialY = rand() % width;
     minesweeper->boardSetup(initialX, initialY);
