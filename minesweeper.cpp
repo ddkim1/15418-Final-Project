@@ -22,6 +22,8 @@ bool Minesweeper::isValid(int x, int y) {
 }
 
 void Minesweeper::boardSetup(int x, int y) {
+    initialX = x;
+    initialY = y;
     for (int i = 0; i < mines; i++) {
         int mineX = rand() % height;
         int mineY = rand() % width;
@@ -44,8 +46,118 @@ void Minesweeper::boardSetup(int x, int y) {
             }
         }
     }
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            solverboard[i][j] = -10;
+        }
+    }
 }
 
-void Minesweeper::sequentialSolver() {
-    
+int Minesweeper::neighboringMines(int x, int y) {
+    int neighboringMines = 0;
+    for (int dx = -1; dx < 2; dx++) {
+        for (int dy = -1; dy < 2; dy++) {
+            if (isValid(x + dx, y + dy) && solverboard[x + dx][y + dy] == -1) {
+                neighboringMines++;
+            }
+        }
+    }
+    return neighboringMines;
+}
+
+int Minesweeper::unknownTiles(int x, int y) {
+    int unknownTiles = 0;
+    for (int dx = -1; dx < 2; dx++) {
+        for (int dy = -1; dy < 2; dy++) {
+            if (isValid(x + dx, y + dy) && solverboard[x + dx][y + dy] == -10) {
+                unknownTiles++;
+            }
+        }
+    }
+    return unknownTiles;
+}
+
+void Minesweeper::doubleTap(int x, int y) {
+    for (int dx = -1; dx < 2; dx++) {
+        for (int dy = -1; dy < 2; dy++) {
+            if (isValid(x + dx, y + dy)) {
+                solverboard[x + dx][y + dy] = board[x + dx][y + dy];
+            }
+        }
+    }
+}
+
+void Minesweeper::deduceMines(int x, int y) {
+    for (int dx = -1; dx < 2; dx++) {
+        for (int dy = -1; dy < 2; dy++) {
+            if (isValid(x + dx, y + dy) && solverboard[x + dx][y + dy] == -10) {
+                solverboard[x + dx][y + dy] = -1;
+                solverMineLocations[mines-minesLeft][0] = x + dx;
+                solverMineLocations[mines-minesLeft][1] = y + dy;
+                minesLeft--;
+            }
+        }
+    }
+}
+
+bool Minesweeper::performMove(int x, int y) {
+    solverboard[x][y] = board[x][y];
+    if (board[x][y] == -1) {
+        return false;
+    }
+    int neighborMines = neighboringMines(x, y);
+    int unknownSquares = unknownTiles(x, y);
+    bool backtrack = false;
+    if (neighborMines == solverboard[x][y]) {
+        doubleTap(x, y);
+        backtrack = true;
+    }
+    if (unknownSquares == solverboard[x][y] - neighborMines) {
+        deduceMines(x, y);
+        backtrack = true;
+    }
+    while (backtrack) {
+        backtrack = false;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                neighborMines = neighboringMines(i, j);
+                unknownSquares = unknownTiles(i, j);
+                if (neighborMines == solverboard[i][j] || unknownSquares == solverboard[i][j] - neighborMines) {
+                    doubleTap(i, j);
+                    backtrack = true;
+                }
+                if (unknownSquares == solverboard[i][j] - neighborMines) {
+                    deduceMines(i, j);
+                    backtrack = true;
+                }
+            }
+        }
+    }
+}
+
+bool Minesweeper::sequentialSolver() {
+    if (!performMove(initialX, initialY)) {
+        for (int i = 0; i < mines; i++) {
+            solverboard[mineLocations[i][0]][mineLocations[i][1]] = -1;
+        }
+        return false;
+    }
+
+    while (minesLeft > 0) {
+        int randX = rand() % height;
+        int randY = rand() % width;
+        while (solverboard[randX][randY] != -10) {
+            int randX = rand() % height;
+            int randY = rand() % width;
+        }
+        if (!performMove(initialX, initialY)) {
+            for (int i = 0; i < mines; i++) {
+            solverboard[mineLocations[i][0]][mineLocations[i][1]] = -1;
+            }
+        return false;
+        }
+    }
+
+    return true;
 }

@@ -48,6 +48,9 @@ int main(int argc, char **argv) {
     if (mode == 0) {
         printf("Solving using sequential algorithm");
         minesweeper->sequentialSolver();
+    } else if (mode == 1){
+        printf("Solving using parallel OpenMP algorithm");
     }
 
+    return 0;
 }
