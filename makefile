@@ -12,13 +12,13 @@ CXXFLAGS = -Wall -g
 LDFLAGS =
 
 # Source files
-SOURCES = main.cpp Minesweeper.cpp
+SOURCES = main.cpp minesweeper.cpp
 
 # Object files
 OBJECTS = $(SOURCES:.cpp=.o)
 
 # Executable name
-EXECUTABLE = MinesweeperGame
+EXECUTABLE = minesweeper
 
 all: $(SOURCES) $(EXECUTABLE)
 
