@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include "minesweeper.h"
 #include <string.h>
+#include <time.h>
 
 using namespace std;
 
@@ -50,6 +51,8 @@ int main(int argc, char **argv) {
     if (mode == 0) {
         printf("Solving using sequential algorithm\n");
         int correct = 0;
+        srand(time(0));
+        int incorrectGuesses = 0;
         for (int i=0; i<100; i++) {
             //printf("Iteration %d\n", i);
             minesweeper->newGame();
@@ -61,9 +64,13 @@ int main(int argc, char **argv) {
             bool success = minesweeper->sequentialSolver();
             //printf("Success? %d\n", success);
             //minesweeper->printBoard();
+            //printf("mines correct? %d\n", minesweeper->solverCorrectness());
             if (success && minesweeper->solverCorrectness()) correct++;
+            //printf("Wrong guesses: %d\n", minesweeper->wrongGuesses);
+            incorrectGuesses += minesweeper->wrongGuesses;
         }
         printf("Number of correct times: %d\n", correct);
+        printf("Average incorrect guesses: %.2f", incorrectGuesses / 100.f);
     
     } else if (mode == 1){
         printf("Solving using parallel OpenMP algorithm");

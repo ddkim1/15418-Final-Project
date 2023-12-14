@@ -1,6 +1,7 @@
 #include "minesweeper.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 Minesweeper::Minesweeper(int h, int w, int m) {
     height = h;
@@ -35,6 +36,7 @@ void Minesweeper::newGame() {
     }
 
     minesLeft = mines;
+    wrongGuesses = 0;
 }
 
 void Minesweeper::boardSetup(int x, int y) {
@@ -136,15 +138,17 @@ void Minesweeper::printBoard() {
     printf("------------------------------\n");
 }
 
-bool Minesweeper::performMove(int x, int y) {
+void Minesweeper::performMove(int x, int y) {
     solverboard[x][y] = board[x][y];
+    bool backtrack = false;
     if (board[x][y] == -1) {
-        return false;
+        wrongGuesses++;
+        minesLeft--;
+        backtrack = true;
     }
     //printf("before vars\n");
     int neighborMines = neighboringMines(x, y);
     int unknownSquares = unknownTiles(x, y);
-    bool backtrack = false;
     if (neighborMines == solverboard[x][y] || solverboard[x][y] == 0) {
         doubleTap(x, y);
         backtrack = true;
@@ -178,7 +182,6 @@ bool Minesweeper::performMove(int x, int y) {
             }
         }
     }
-    return true;
 }
 
 bool Minesweeper::solverCorrectness() {
@@ -186,49 +189,53 @@ bool Minesweeper::solverCorrectness() {
         return false;
     }
     for (int i = 0; i < mines; i++) {
-        if (solverboard[solverMineLocations[2*i]][solverMineLocations[2*i+1]] != -1) {
+        if (solverboard[mineLocations[2*i]][mineLocations[2*i+1]] != -1) {
             return false;
         }
     }
     return true;
 }
 
+int Minesweeper::totalUnknown() {
+    int unknown = 0;
+    for (int i=0; i<height; i++) {
+        for (int j=0; j<width; j++) {
+            if (solverboard[i][j] == -10) unknown++;
+        }
+    }
+    return unknown;
+}
+
 bool Minesweeper::sequentialSolver() {
     //printf("before init\n");
-    if (!performMove(initialX, initialY)) {
-        for (int i = 0; i < mines; i++) {
-            solverboard[mineLocations[2*i]][mineLocations[2*i+1]] = -1;
-        }
-        return false;
-    }
+    performMove(initialX, initialY);
     //printf("after init\n");
     //printBoard();
     //printf("mines left: %d\n", minesLeft);
 
     while (minesLeft > 0) {
+        //printf("start of loop\n");
+        int tilesLeft = totalUnknown();
         //printf("mines left: %d\n", minesLeft);
-        int randX = 0;
-        int randY = 0;
+        //printf("tiles unknown: %d\n", tilesLeft);
+        //printBoard();
+        int randomIndex = rand() % tilesLeft;
+        //printf("generate index\n");
+        int unknownSeen = 0;
+        int randX, randY;
         for (int i=0; i<height; i++) {
             for (int j=0; j<width; j++) {
-                if (solverboard[i][j] == -10) {
+                if (solverboard[i][j] == -10 && unknownSeen == randomIndex) {
                     randX = i;
                     randY = j;
+                } else if (solverboard[i][j] == -10) {
+                    unknownSeen++;
                 }
             }
         }
         //printf("after random move\n");
-        bool moveSuccess = performMove(randX, randY);
-        //printf("after move and openings\n");
-        //printBoard();
-        //printf("success: %d\n", moveSuccess);
-        //printf("minesLeft: %d\n", minesLeft);
-        if (!moveSuccess) {
-            for (int i = 0; i < mines; i++) {
-                solverboard[mineLocations[2*i]][mineLocations[2*i+1]] = -1;
-            }
-            return false;
-        }
+        performMove(randX, randY);
+        //printf("after perform move\n");
     }
 
     return true;
