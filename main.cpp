@@ -46,7 +46,9 @@ int main(int argc, char **argv) {
         }
     }
 
-    Minesweeper* minesweeper = new Minesweeper(height, width, mines); 
+    Minesweeper* minesweeper = new Minesweeper(height, width, mines);
+    printf("after making\n"); 
+    printf("mode: %d\n", mode);
 
     if (mode == 0) {
         printf("Solving using sequential algorithm\n");
@@ -70,10 +72,36 @@ int main(int argc, char **argv) {
             incorrectGuesses += minesweeper->wrongGuesses;
         }
         printf("Number of correct times: %d\n", correct);
-        printf("Average incorrect guesses: %.2f", incorrectGuesses / 100.f);
+        printf("Average incorrect guesses: %.2f\n", incorrectGuesses / 100.f);
     
     } else if (mode == 1){
-        printf("Solving using parallel OpenMP algorithm");
+        printf("Solving using parallel OpenMP algorithm\n");
+        int correct = 0;
+        srand(time(0));
+        int incorrectGuesses = 0;
+        for (int i=0; i<100; i++) {
+            //printf("---------------------------\n");
+            //printf("Iteration %d\n", i);
+            minesweeper->newGame();
+            int initialX = rand() % height;
+            int initialY = rand() % width;
+            minesweeper->boardSetup(initialX, initialY);
+            //minesweeper->printBoard();
+            //printf("before solver\n");
+            bool success = minesweeper->openmpSolver();
+            //printf("Success? %d\n", success);
+            //minesweeper->printBoard();
+            //printf("mines correct? %d\n", minesweeper->solverCorrectness());
+            if (success && minesweeper->solverCorrectness()) correct++;
+            if (!minesweeper->solverCorrectness()) {
+                minesweeper->printBoard();
+                printf("mines left: %d\n", minesweeper->minesLeft);
+            }
+            //printf("Wrong guesses: %d\n", minesweeper->wrongGuesses);
+            incorrectGuesses += minesweeper->wrongGuesses;
+        }
+        printf("Number of correct times: %d\n", correct);
+        printf("Average incorrect guesses: %.2f\n", incorrectGuesses / 100.f);
     }
 
     return 0;

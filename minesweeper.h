@@ -10,6 +10,7 @@ public:
     int initialY;
     int **board;
     int **solverboard;
+    int **solverboard2;
     int *mineLocations;
     int *solverMineLocations;
     int wrongGuesses;
@@ -25,6 +26,13 @@ public:
     void newGame();
     bool solverCorrectness();
     int totalUnknown();
+
+    int openmpNeighboringMines(int x, int y);
+    int openmpUnknownTiles(int x, int y);
+    void openmpDoubleTap(int x, int y);
+    void openmpDeduceMines(int x, int y);
+    int openmpTotalUnknown();
+    void openmpPerformMove(int x, int y);
 
     void printBoard();
 

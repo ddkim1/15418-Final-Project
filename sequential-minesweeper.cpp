@@ -10,9 +10,11 @@ Minesweeper::Minesweeper(int h, int w, int m) {
     minesLeft = m;
     board = (int**)malloc(height * sizeof(int*));
     solverboard = (int**)malloc(height * sizeof(int*));
+    solverboard2 = (int**)malloc(height * sizeof(int*));
     for (int i = 0; i < height; i++) {
         board[i] = (int*)calloc(width, sizeof(int));
         solverboard[i] = (int*)calloc(width, sizeof(int));
+        solverboard2[i] = (int*)calloc(width, sizeof(int));
     }
     mineLocations = (int*)malloc(2 * mines * sizeof(int));
     solverMineLocations = (int*)malloc(2 * mines * sizeof(int));
@@ -27,6 +29,7 @@ void Minesweeper::newGame() {
         for (int j = 0; j < width; j++) {
             board[i][j] = 0;
             solverboard[i][j] = 0;
+            solverboard2[i][j] = 0;
         }
     }
 
@@ -69,6 +72,7 @@ void Minesweeper::boardSetup(int x, int y) {
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             solverboard[i][j] = -10;
+            solverboard2[i][j] = -10;
         }
     }
 }
@@ -125,6 +129,13 @@ void Minesweeper::printBoard() {
     for (int i=0; i<height; i++) {
         for (int j=0; j<width; j++) {
             printf("%d ", solverboard[i][j]);
+        }
+        printf("\n");
+    }
+    printf("-----------------------------\n");
+    for (int i=0; i<height; i++) {
+        for (int j=0; j<width; j++) {
+            printf("%d ", solverboard2[i][j]);
         }
         printf("\n");
     }

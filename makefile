@@ -6,13 +6,13 @@
 CXX = g++
 
 # Compiler flags
-CXXFLAGS = -Wall -g
+CXXFLAGS = -Wall -g -fopenmp
 
 # Linker flags
-LDFLAGS =
+LDFLAGS = -fopenmp
 
 # Source files
-SOURCES = main.cpp minesweeper.cpp
+SOURCES = main.cpp sequential-minesweeper.cpp openmp-minesweeper.cpp
 
 # Object files
 OBJECTS = $(SOURCES:.cpp=.o)
