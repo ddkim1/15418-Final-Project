@@ -101,7 +101,7 @@ void Minesweeper::openmpPerformMove(int x, int y) {
         //printf("after print\n");
         backtrack = false;
 
-        #pragma omp parallel for collapse(2) schedule(dynamic, 16)
+        #pragma omp parallel for collapse(2)
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 //printf("i: %d j: %d\n", i, j);
