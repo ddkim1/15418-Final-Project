@@ -155,7 +155,7 @@ void Minesweeper::openmpPerformMove(int x, int y) {
 
 int Minesweeper::openmpTotalUnknown() {
     int unknown = 0;
-    #pragma omp parallel for reduction(+:unknown)
+    #pragma omp parallel for reduction(+:unknown) collapse(2)
     for (int i=0; i<height; i++) {
         for (int j=0; j<width; j++) {
             if (solverboard[i][j] == -10) unknown++;
