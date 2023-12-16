@@ -14,7 +14,7 @@ Minesweeper::Minesweeper(int h, int w, int m) {
     for (int i = 0; i < height; i++) {
         board[i] = (int*)calloc(width, sizeof(int));
         solverboard[i] = (int*)calloc(width, sizeof(int));
-        solverboard2[i] = (int*)calloc(width, sizeof(int));
+        openmpboard[i] = (int*)calloc(width, sizeof(int));
     }
     mineLocations = (int*)malloc(2 * mines * sizeof(int));
     solverMineLocations = (int*)malloc(2 * mines * sizeof(int));

@@ -11,7 +11,7 @@ void Minesweeper::openmpDoubleTap(int x, int y) {
             //printf("inf loop\n");
             if (isValid(x + dx, y + dy)) {
                 //printf("setting position %d %d as %d\n", x+dx, y+dy, board[x+dx][y+dy]);
-                solverboard2[x + dx][y + dy] = board[x+dx][y+dy];
+                openmpboard[x + dx][y + dy] = board[x+dx][y+dy];
             }
         }
     }
@@ -20,15 +20,15 @@ void Minesweeper::openmpDoubleTap(int x, int y) {
 void Minesweeper::openmpDeduceMines(int x, int y) {
     for (int dx = -1; dx < 2; dx++) {
         for (int dy = -1; dy < 2; dy++) {
-            if (isValid(x + dx, y + dy) && solverboard2[x + dx][y + dy] == -10) {
+            if (isValid(x + dx, y + dy) && openmpboard[x + dx][y + dy] == -10) {
                 //printf("setting mine %d\n", mines-minesLeft);
 
                 //printf("mine location: %d %d\n", x+dx, y+dy);
-                //printf("current location value: %d\n", solverboard2[x+dx][y+dy]);
+                //printf("current location value: %d\n", openmpboard[x+dx][y+dy]);
                 #pragma omp critical
                 {
-                    if (solverboard2[x+dx][y+dy] == -10) {
-                        solverboard2[x + dx][y + dy] = -1;
+                    if (openmpboard[x+dx][y+dy] == -10) {
+                        openmpboard[x + dx][y + dy] = -1;
                         minesLeft--;
                         //printf("left mines: %d\n", minesLeft);
                     }
@@ -42,7 +42,7 @@ int Minesweeper::openmpNeighboringMines(int x, int y) {
     int neighboringMines = 0;
     for (int dx = -1; dx < 2; dx++) {
         for (int dy = -1; dy < 2; dy++) {
-            if (isValid(x + dx, y + dy) && solverboard2[x + dx][y + dy] == -1) {
+            if (isValid(x + dx, y + dy) && openmpboard[x + dx][y + dy] == -1) {
                 neighboringMines++;
             }
         }
@@ -64,7 +64,7 @@ int Minesweeper::openmpUnknownTiles(int x, int y) {
 
 void Minesweeper::openmpPerformMove(int x, int y) {
     solverboard[x][y] = board[x][y];
-    solverboard2[x][y] = board[x][y];
+    openmpboard[x][y] = board[x][y];
     bool backtrack = false;
     if (board[x][y] == -1) {
         //printf("Mine placed at %d %d\n", x, y);
@@ -91,7 +91,7 @@ void Minesweeper::openmpPerformMove(int x, int y) {
     if (backtrack) {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                solverboard[i][j] = solverboard2[i][j];
+                solverboard[i][j] = openmpboard[i][j];
             }
         }
     }*/
@@ -105,12 +105,12 @@ void Minesweeper::openmpPerformMove(int x, int y) {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 //printf("i: %d j: %d\n", i, j);
-                if (solverboard2[i][j] >= 0) {
+                if (openmpboard[i][j] >= 0) {
                     int localNeighborMines = neighboringMines(i, j);
                     int localUnknownSquares = unknownTiles(i, j);
                     //printf("unknownsquares at %d %d: %d\n", i, j, unknownSquares);
                     if (localUnknownSquares > 0) {
-                        if (localNeighborMines == solverboard2[i][j]) {
+                        if (localNeighborMines == openmpboard[i][j]) {
                             openmpDoubleTap(i, j);
                             //printf("doubletap: setting backtrack true at i: %d j:%d\n", i, j);
                             if (!backtrack) {
@@ -119,11 +119,11 @@ void Minesweeper::openmpPerformMove(int x, int y) {
                                     backtrack = true;
                                 }
                             }
-                        } else if (localUnknownSquares > 0 && localUnknownSquares == solverboard2[i][j] - localNeighborMines && solverboard2[i][j] != -1) {
+                        } else if (localUnknownSquares > 0 && localUnknownSquares == openmpboard[i][j] - localNeighborMines && openmpboard[i][j] != -1) {
                             //printf("deducemines: setting backtrack true at i: %d j:%d\n", i, j);
                             //printf("unknownSquares: %d\n", localUnknownSquares);
                             //printf("neighborMines: %d\n", localNeighborMines);
-                            //printf("number at square: %d\n", solverboard2[i][j]);
+                            //printf("number at square: %d\n", openmpboard[i][j]);
                             //printBoard();
                             openmpDeduceMines(i, j);
                             if (!backtrack) {
@@ -143,7 +143,7 @@ void Minesweeper::openmpPerformMove(int x, int y) {
         #pragma omp parallel for collapse(2) 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                solverboard[i][j] = solverboard2[i][j];
+                solverboard[i][j] = openmpboard[i][j];
             }
         }
 
